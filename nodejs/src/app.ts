@@ -1505,48 +1505,7 @@ app.get("/api/contestant/dashboard", async (req, res, next) => {
 })
 
 app.get("/api/contestant/notifications", async (req, res, next) => {
-  const db = await getDB()
-  try {
-    await db.beginTransaction()
-    const loginSuccess = await loginRequired(req, res, db)
-    if (!loginSuccess) {
-      await db.rollback()
-      return
-    }
-
-    const after = req.query.after
-    const currentContestant = await getCurrentContestant(req, db)
-
-    const notifications = await db.query(
-      after
-        ? "SELECT * FROM `notifications` WHERE `contestant_id` = ? AND `id` > ? ORDER BY `id`"
-        : "SELECT * FROM `notifications` WHERE `contestant_id` = ? AND `read` = FALSE ORDER BY `id`",
-      [currentContestant.id, after]
-    )
-
-    await db.query(
-      "UPDATE `notifications` SET `read` = TRUE WHERE `contestant_id` = ? AND `read` = FALSE",
-      [currentContestant.id]
-    )
-
-    await db.commit()
-
-    const currentTeam = await getCurrentTeam(req, db)
-    const [lastAnsweredClar] = await db.query(
-      "SELECT `id` FROM `clarifications` WHERE (`team_id` = ? OR `disclosed` = TRUE) AND `answered_at` IS NOT NULL ORDER BY `id` DESC LIMIT 1",
-      [currentTeam.id]
-    )
-
-    const response = new ListNotificationsResponse()
-    response.setLastAnsweredClarificationId(lastAnsweredClar?.id)
-    response.setNotificationsList(getNotificationsResource(notifications))
-    res.contentType(`application/vnd.google.protobuf`)
-    res.end(Buffer.from(response.serializeBinary()))
-  } catch (e) {
-    await db.rollback()
-  } finally {
-    await db.release()
-  }
+  res.json([])
 })
 
 app.post("/api/contestant/push_subscriptions", async (req, res, next) => {
