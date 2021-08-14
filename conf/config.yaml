@@ -68,8 +68,8 @@ static_resources:
                       path: /var/log/envoy/access.log
                       json_format:
                         time: "%START_TIME%"
-                        method: "%PROTOCOL%"
-                        uri: "%ROUTE_NAME%"
+                        method: "%REQ(:METHOD)%"
+                        uri: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
                         status: "%RESPONSE_CODE%"
                         response_time: "%RESPONSE_DURATION%"
                         request_time: "%REQUEST_DURATION%"
