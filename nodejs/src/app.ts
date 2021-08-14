@@ -74,7 +74,7 @@ import {
 } from "../proto/xsuportal/services/contestant/clarifications_pb"
 import { Notification } from "../proto/xsuportal/resources/notification_pb"
 
-const TEAM_CAPACITY = 10
+const TEAM_CAPACITY = 50
 const MYSQL_ER_DUP_ENTRY = 1062
 const ADMIN_ID = "admin"
 const ADMIN_PASSWORD = "admin"
