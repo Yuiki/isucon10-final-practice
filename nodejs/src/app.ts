@@ -1517,17 +1517,18 @@ app.get("/api/contestant/notifications", async (req, res, next) => {
     const after = req.query.after
     const currentContestant = await getCurrentContestant(req, db)
 
-    const notifications = await db.query(
-      after
-        ? "SELECT * FROM `notifications` WHERE `contestant_id` = ? AND `id` > ? ORDER BY `id`"
-        : "SELECT * FROM `notifications` WHERE `contestant_id` = ? AND `read` = FALSE ORDER BY `id`",
-      [currentContestant.id, after]
-    )
-
-    await db.query(
-      "UPDATE `notifications` SET `read` = TRUE WHERE `contestant_id` = ? AND `read` = FALSE",
-      [currentContestant.id]
-    )
+    const [notifications, _] = await Promise.all([
+      db.query(
+        after
+          ? "SELECT * FROM `notifications` WHERE `contestant_id` = ? AND `id` > ? ORDER BY `id`"
+          : "SELECT * FROM `notifications` WHERE `contestant_id` = ? AND `read` = FALSE ORDER BY `id`",
+        [currentContestant.id, after]
+      ),
+      db.query(
+        "UPDATE `notifications` SET `read` = TRUE WHERE `contestant_id` = ? AND `read` = FALSE",
+        [currentContestant.id]
+      ),
+    ])
 
     await db.commit()
 
