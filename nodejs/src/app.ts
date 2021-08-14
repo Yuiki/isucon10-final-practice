@@ -138,9 +138,7 @@ export const app = express()
 app.set("trust proxy", 1)
 app.use(
   express.static("../public", {
-    setHeaders: (res, path) => {
-      res.setHeader("Cache-Control", "public, max-age=3600")
-    },
+    maxAge: 60 * 60 * 1000,
   })
 )
 app.use(morgan("combined"))
