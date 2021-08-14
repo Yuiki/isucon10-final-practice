@@ -3,7 +3,7 @@ static_resources:
     - name: http
       address:
         socket_address:
-          address: '::'
+          address: "::"
           port_value: 80
           ipv4_compat: true
       filter_chains:
@@ -12,7 +12,7 @@ static_resources:
               typed_config:
                 "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
                 codec_type: AUTO
-                stat_prefix: 'router'
+                stat_prefix: "router"
                 http_filters:
                   - name: envoy.router
                     typed_config: {}
@@ -29,7 +29,7 @@ static_resources:
     - name: https
       address:
         socket_address:
-          address: '::'
+          address: "::"
           port_value: 443
           ipv4_compat: true
       filter_chains:
@@ -38,7 +38,7 @@ static_resources:
               typed_config:
                 "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
                 codec_type: AUTO
-                stat_prefix: 'router'
+                stat_prefix: "router"
                 http_filters:
                   - name: envoy.router
                     typed_config: {}
@@ -73,6 +73,7 @@ static_resources:
                         status: "%RESPONSE_CODE%"
                         response_time: "%RESPONSE_DURATION%"
                         request_time: "%REQUEST_DURATION%"
+                        body_bytes: "%BYTES_RECEIVED%"
           transport_socket:
             name: envoy.transport_sockets.tls
             typed_config:
@@ -83,8 +84,9 @@ static_resources:
                   tls_minimum_protocol_version: "TLSv1_2"
                   tls_maximum_protocol_version: "TLSv1_2"
                 tls_certificates:
-                  - certificate_chain: {"filename": "/etc/ssl/private/tls-cert.pem"}
-                    private_key: {"filename": "/etc/ssl/private/tls-key.pem"}
+                  - certificate_chain:
+                      { "filename": "/etc/ssl/private/tls-cert.pem" }
+                    private_key: { "filename": "/etc/ssl/private/tls-key.pem" }
   clusters:
     - name: xsuportal_web
       type: STATIC
