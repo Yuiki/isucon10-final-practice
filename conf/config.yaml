@@ -125,3 +125,13 @@ static_resources:
                     socket_address:
                       address: "127.0.0.1"
                       port_value: 50051
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: "10.0.0.200"
+                      port_value: 9292
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: "10.0.0.226"
+                      port_value: 9292
