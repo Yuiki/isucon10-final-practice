@@ -63,16 +63,7 @@ export class Notifier {
         notification.setId(inserted.id)
         notification.setCreatedAt(convertDateToTimestamp(inserted.created_at))
 
-        const subscriptions: any[] = await db.query(
-          "SELECT p.id, p.contestant_id, p.endpoint, p.p256dh, p.auth, p.created_at, updated_at FROM contestants c INNER JOIN push_subscriptions p ON c.id = p.contestant_id WHERE c.team_id = ?",
-          [clar.team_id]
-        )
-
-        const sendWebPushPromises = subscriptions.map((subscription) =>
-          sendWebpush(this.getVAPIDKey(), notification, subscription)
-        )
-
-        await Promise.all(sendWebPushPromises)
+        // TODO: いい感じにしたかった
       }
     }
   }
@@ -93,16 +84,7 @@ export class Notifier {
         notification.setId(inserted.id)
         notification.setCreatedAt(convertDateToTimestamp(inserted.created_at))
 
-        const subscriptions: any[] = await db.query(
-          "SELECT p.id, p.contestant_id, p.endpoint, p.p256dh, p.auth, p.created_at, updated_at FROM contestants c INNER JOIN push_subscriptions p ON c.id = p.contestant_id WHERE c.team_id = ?",
-          [job.team_id]
-        )
-
-        const sendWebPushPromises = subscriptions.map((subscription) =>
-          sendWebpush(this.getVAPIDKey(), notification, subscription)
-        )
-
-        await Promise.all(sendWebPushPromises)
+        // TODO: いい感じにしたかった
       }
     }
   }
