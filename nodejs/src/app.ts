@@ -974,7 +974,7 @@ app.get("/api/audience/teams", async (req, res, next) => {
         teamListItem.addMemberNames(teamItem.member_name)
         teams.set(teamItem.team_id, teamListItem)
       } else {
-        const teamListItem = teams.get(teamItem.team_id)
+        const teamListItem = teams.get(teamItem.team_id).clone()
         // 学生ではないメンバーが1人でもいれば社会人枠
         if (teamItem.student === 0) teamListItem.setIsStudent(false)
         teamListItem.addMemberNames(teamItem.member_name)
