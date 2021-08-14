@@ -1508,12 +1508,17 @@ app.get("/api/contestant/dashboard", async (req, res, next) => {
 
 app.get("/api/contestant/notifications", async (req, res, next) => {
   const db = await getDB()
-  const loginSuccess = await loginRequired(req, res, db, { team: false })
-  if (!loginSuccess) {
-    return
+  try {
+    await db.beginTransaction()
+    const loginSuccess = await loginRequired(req, res, db)
+    if (!loginSuccess) {
+      await db.rollback()
+      return
+    }
+    res.json([])
+  } catch (e) {
+    db.rollback()
   }
-
-  res.json([])
 })
 
 app.post("/api/contestant/push_subscriptions", async (req, res, next) => {
