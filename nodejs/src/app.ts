@@ -959,27 +959,31 @@ app.get("/api/session", async (req, res, next) => {
 app.get("/api/audience/teams", async (req, res, next) => {
   const db = await getDB()
   try {
-    const teams = await db.query(
-      "SELECT * FROM `teams` WHERE `withdrawn` = FALSE ORDER BY `created_at` DESC"
+    const teams = new Map<string, AudienceListTeamsResponse.TeamListItem>()
+
+    const teamItems = await db.query(
+      "SELECT *, t.name AS team_name, c.name AS member_name FROM `teams` t LEFT JOIN `contestants` c ON t.id = c.team_id WHERE t.withdrawn = FALSE ORDER BY t.created_at DESC"
     )
-    const items = []
-    for (const team of teams) {
-      const members = await db.query(
-        "SELECT * FROM `contestants` WHERE `team_id` = ? ORDER BY `created_at`",
-        [team.id]
-      )
-      const teamListItem = new AudienceListTeamsResponse.TeamListItem()
-      teamListItem.setTeamId(team.id)
-      teamListItem.setName(team.name)
-      teamListItem.setIsStudent(
-        members.every((member: any) => !!member.student)
-      )
-      teamListItem.setMemberNamesList(members.map((member: any) => member.name))
-      items.push(teamListItem)
+
+    for (const teamItem of teamItems) {
+      if (teams.has(teamItem.team_id)) {
+        const teamListItem = new AudienceListTeamsResponse.TeamListItem()
+        teamListItem.setTeamId(teamItem.team_id)
+        teamListItem.setName(teamItem.team_name)
+        teamListItem.setIsStudent(!!teamItem.student)
+        teamListItem.addMemberNames(teamItem.member_name)
+        teams.set(teamItem.team_id, teamListItem)
+      } else {
+        const teamListItem = teams.get(teamItem.team_id)
+        // 学生ではないメンバーが1人でもいれば社会人枠
+        if (teamItem.student === 0) teamListItem.setIsStudent(false)
+        teamListItem.addMemberNames(teamItem.member_name)
+        teams.set(teamItem.team_id, teamListItem)
+      }
     }
 
     const response = new AudienceListTeamsResponse()
-    response.setTeamsList(items)
+    response.setTeamsList(Array.from(teams.values()))
 
     res.contentType(`application/vnd.google.protobuf`)
     res.end(Buffer.from(response.serializeBinary()))
