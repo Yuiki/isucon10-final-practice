@@ -61,17 +61,17 @@ static_resources:
                           route:
                             cluster: xsuportal_web
                 use_remote_address: true
-                access_log:
-                  - name: envoy.file_access_log
-                    config:
-                      path: /var/log/envoy/access.log
-                      json_format:
-                        time: "%START_TIME%"
-                        method: "%PROTOCOL%"
-                        uri: "%ROUTE_NAME%"
-                        status: "%RESPONSE_CODE%"
-                        response_time: "%RESPONSE_DURATION%"
-                        request_time: "%REQUEST_DURATION%"
+              access_log:
+                - name: envoy.file_access_log
+                  config:
+                    path: /var/log/envoy/access.log
+                    json_format:
+                      time: "%START_TIME%"
+                      method: "%PROTOCOL%"
+                      uri: "%ROUTE_NAME%"
+                      status: "%RESPONSE_CODE%"
+                      response_time: "%RESPONSE_DURATION%"
+                      request_time: "%REQUEST_DURATION%"
           transport_socket:
             name: envoy.transport_sockets.tls
             typed_config:
