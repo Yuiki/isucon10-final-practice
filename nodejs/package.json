@@ -11,12 +11,14 @@
     "send-webpush": "ts-node src/sendWebpush.ts",
     "start-bench": "node build/bin/benchmark_server/main.js",
     "build": "tsc --build ./tsconfig.json",
-    "start": "node ./build/bin/app.js"
+    "start": "node ./build/bin/app.js",
+    "0x": "0x ./build/bin/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "0x": "^4.10.2",
     "@types/cookie-session": "^2.0.41",
     "@types/express": "^4.17.8",
     "@types/google-protobuf": "^3.7.3",
