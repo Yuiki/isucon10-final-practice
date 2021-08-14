@@ -987,19 +987,37 @@ app.get("/api/audience/teams", async (req, res, next) => {
   }
 })
 
+let cachedAudienceLearderboardTime = 0 // sec
+let cachedAudienctLeaderboard: Leaderboard | null = null
+
 app.get("/api/audience/dashboard", async (req, res, next) => {
-  const db = await getDB()
+  const nowSec = Math.floor(new Date().getTime() / 1000)
+  const expired = nowSec != cachedAudienceLearderboardTime
+  const response = new AudienceDashboardResponse()
+
   try {
-    const response = new AudienceDashboardResponse()
-    const leaderboard = await getLeaderboardResource(db)
+    let leaderboard: Leaderboard
+    if (expired) {
+      const db = await getDB()
+      try {
+        leaderboard = await getLeaderboardResource(db)
+        cachedAudienctLeaderboard = leaderboard
+        cachedAudienceLearderboardTime = nowSec
+      } catch (e) {
+        throw e
+      } finally {
+        await db.release()
+      }
+    } else {
+      leaderboard = cachedAudienctLeaderboard
+    }
+
     response.setLeaderboard(leaderboard)
     res.contentType(`application/vnd.google.protobuf`)
     res.end(Buffer.from(response.serializeBinary()))
   } catch (e) {
     console.error(e)
     haltPb(res, 500, "予期せぬエラーが発生しました")
-  } finally {
-    await db.release()
   }
 })
 
