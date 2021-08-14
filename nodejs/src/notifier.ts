@@ -8,8 +8,6 @@ import type { PoolConnection } from "promise-mysql"
 import { Notification } from "../proto/xsuportal/resources/notification_pb"
 import { convertDateToTimestamp } from "./app"
 
-import { sendWebpush } from "./sendWebpush"
-
 const sleep = util.promisify(setTimeout)
 export class Notifier {
   static WEBPUSH_VAPID_PRIVATE_KEY_PATH = "../vapid_private.pem"
