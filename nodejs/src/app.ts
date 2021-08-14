@@ -1121,7 +1121,7 @@ app.post("/api/registration/team", async (req, res, next) => {
       [TEAM_CAPACITY]
     )
     const [teams] = await db.query("SELECT COUNT(*) FROM `teams`")
-    console.log(teams)
+    console.log("logloglogloglog", teams)
     if (withinCapacity.within_capacity != 1) {
       return haltPb(res, 403, "チーム登録数上限です")
     }
