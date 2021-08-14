@@ -1515,7 +1515,10 @@ app.get("/api/contestant/notifications", async (req, res, next) => {
       await db.rollback()
       return
     }
-    res.json([])
+    const response = new ListNotificationsResponse()
+    response.setNotificationsList([])
+    res.contentType(`application/vnd.google.protobuf`)
+    res.end(Buffer.from(response.serializeBinary()))
   } catch (e) {
     db.rollback()
   }
