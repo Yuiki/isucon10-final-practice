@@ -1507,6 +1507,11 @@ app.get("/api/contestant/dashboard", async (req, res, next) => {
 })
 
 app.get("/api/contestant/notifications", async (req, res, next) => {
+  const loginSuccess = await loginRequired(req, res, db, { team: false })
+  if (!loginSuccess) {
+    return
+  }
+
   res.json([])
 })
 
