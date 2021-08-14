@@ -104,12 +104,12 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: "isu1.isu10f.yuiki.jp"
+                      address: "10.0.0.200"
                       port_value: 9292
               - endpoint:
                   address:
                     socket_address:
-                      address: "isu3.isu10f.yuiki.jp"
+                      address: "10.0.0.226"
                       port_value: 9292
     - name: xsuportal_api
       type: STATIC
