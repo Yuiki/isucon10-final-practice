@@ -1,5 +1,4 @@
 import express from "express"
-import session from "cookie-session"
 import mysql from "promise-mysql"
 import crypto from "crypto"
 import fs from "fs"
@@ -73,6 +72,7 @@ import {
   RequestClarificationResponse,
 } from "../proto/xsuportal/services/contestant/clarifications_pb"
 import { Notification } from "../proto/xsuportal/resources/notification_pb"
+import cookieParser from "cookie-parser"
 
 const TEAM_CAPACITY = 20
 const MYSQL_ER_DUP_ENTRY = 1062
@@ -142,13 +142,7 @@ app.use(
   })
 )
 app.use(morgan("combined"))
-app.use(
-  session({
-    secret: "tagomoris",
-    name: "session_xsucon",
-    maxAge: 60 * 60 * 1000,
-  })
-)
+app.use(cookieParser())
 
 // rawbody
 app.use(express.raw({ type: "application/vnd.google.protobuf" }))
@@ -172,7 +166,7 @@ const getCurrentContestant = (function () {
     if (req.context.currentContestant) {
       return req.context.currentContestant
     }
-    const id = req.session.contestant_id
+    const id = req.cookies.contestant_id
     if (!id) return null
     const result = await db.query(
       lock
@@ -1638,7 +1632,7 @@ app.post("/api/signup", async (req, res, next) => {
           .digest("hex"),
       ]
     )
-    req.session.contestant_id = request.getContestantId()
+    res.cookie("contestant_id", request.getContestantId())
     const response = new SignupResponse()
     res.contentType(`application/vnd.google.protobuf`)
     res.end(Buffer.from(response.serializeBinary()))
@@ -1666,7 +1660,7 @@ app.post("/api/login", async (req, res, next) => {
         .update(request.getPassword(), "utf8")
         .digest("hex")
     ) {
-      req.session.contestant_id = request.getContestantId()
+      res.cookie("contestant_id", request.getContestantId())
     } else {
       return haltPb(res, 400, "ログインIDまたはパスワードが正しくありません")
     }
@@ -1682,8 +1676,8 @@ app.post("/api/login", async (req, res, next) => {
 })
 
 app.post("/api/logout", async (req, res, next) => {
-  if (req.session.contestant_id) {
-    req.session.contestant_id = null
+  if (req.cookies.contestant_id) {
+    res.cookie("contestant_id", null)
     const response = new LogoutResponse()
     res.contentType(`application/vnd.google.protobuf`)
     res.end(Buffer.from(response.serializeBinary()))
