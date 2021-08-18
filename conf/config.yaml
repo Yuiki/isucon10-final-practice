@@ -99,7 +99,7 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: "10.0.0.64"
+                      address: "127.0.0.1"
                       port_value: 9292
               - endpoint:
                   address:
@@ -118,5 +118,5 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: "10.0.0.64"
+                      address: "127.0.0.1"
                       port_value: 50051

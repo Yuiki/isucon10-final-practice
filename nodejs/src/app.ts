@@ -142,7 +142,7 @@ app.use(
   })
 )
 app.use(morgan("combined"))
-app.use(cookieParser())
+app.use(cookieParser("tagomoris"))
 
 // rawbody
 app.use(express.raw({ type: "application/vnd.google.protobuf" }))
