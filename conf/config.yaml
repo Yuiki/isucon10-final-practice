@@ -101,6 +101,11 @@ static_resources:
                     socket_address:
                       address: "127.0.0.1"
                       port_value: 9292
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: "10.0.0.200"
+                      port_value: 9292
     - name: xsuportal_api
       type: STATIC
       connect_timeout: 0.25s
