@@ -166,7 +166,7 @@ const getCurrentContestant = (function () {
     if (req.context.currentContestant) {
       return req.context.currentContestant
     }
-    const id = req.cookies.contestant_id
+    const id = req.signedCookies.contestant_id
     if (!id) return null
     const result = await db.query(
       lock
@@ -1632,7 +1632,7 @@ app.post("/api/signup", async (req, res, next) => {
           .digest("hex"),
       ]
     )
-    res.cookie("contestant_id", request.getContestantId())
+    res.cookie("contestant_id", request.getContestantId(), { signed: true })
     const response = new SignupResponse()
     res.contentType(`application/vnd.google.protobuf`)
     res.end(Buffer.from(response.serializeBinary()))
@@ -1660,7 +1660,7 @@ app.post("/api/login", async (req, res, next) => {
         .update(request.getPassword(), "utf8")
         .digest("hex")
     ) {
-      res.cookie("contestant_id", request.getContestantId())
+      res.cookie("contestant_id", request.getContestantId(), { signed: true })
     } else {
       return haltPb(res, 400, "ログインIDまたはパスワードが正しくありません")
     }
@@ -1676,8 +1676,8 @@ app.post("/api/login", async (req, res, next) => {
 })
 
 app.post("/api/logout", async (req, res, next) => {
-  if (req.cookies.contestant_id) {
-    res.cookie("contestant_id", null)
+  if (req.signedCookies.contestant_id) {
+    res.cookie("contestant_id", null, { signed: true })
     const response = new LogoutResponse()
     res.contentType(`application/vnd.google.protobuf`)
     res.end(Buffer.from(response.serializeBinary()))
