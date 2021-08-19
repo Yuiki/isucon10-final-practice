@@ -57,6 +57,10 @@ static_resources:
                           route:
                             cluster: xsuportal_api
                         - match:
+                            prefix: "/api/audience"
+                          route:
+                            cluster: xsuportal_web_audience
+                        - match:
                             prefix: "/"
                           route:
                             cluster: xsuportal_web
@@ -106,6 +110,19 @@ static_resources:
                     socket_address:
                       address: "10.0.0.64"
                       port_value: 9292
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: "10.0.0.226"
+                      port_value: 9292
+    - name: xsuportal_web_audience
+      type: STATIC
+      connect_timeout: 0.25s
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: xsuportal_web
+        endpoints:
+          - lb_endpoints:
               - endpoint:
                   address:
                     socket_address:
