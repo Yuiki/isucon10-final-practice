@@ -136,11 +136,6 @@ export const secureRandom = (size: number) => {
 export const app = express()
 
 app.set("trust proxy", 1)
-app.use(
-  express.static("../public", {
-    maxAge: 60 * 60 * 1000,
-  })
-)
 app.use(morgan("combined"))
 app.use(cookieParser("tagomoris"))
 
@@ -705,7 +700,7 @@ for (const adminPath of adminPaths) {
   })
 }
 
-app.use(express.static(path.resolve("public")))
+app.use(express.static(path.resolve("public"), { immutable: true }))
 
 app.post("/initialize", async (req, res, next) => {
   const db = await getDB()
