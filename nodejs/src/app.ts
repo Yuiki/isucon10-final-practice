@@ -74,7 +74,7 @@ import {
 import { Notification } from "../proto/xsuportal/resources/notification_pb"
 import cookieParser from "cookie-parser"
 
-const TEAM_CAPACITY = 20
+const TEAM_CAPACITY = 30
 const MYSQL_ER_DUP_ENTRY = 1062
 const ADMIN_ID = "admin"
 const ADMIN_PASSWORD = "admin"
