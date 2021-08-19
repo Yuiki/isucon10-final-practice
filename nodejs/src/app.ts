@@ -136,7 +136,6 @@ export const secureRandom = (size: number) => {
 export const app = express()
 
 app.set("trust proxy", 1)
-app.use(morgan("combined"))
 app.use(cookieParser("tagomoris"))
 
 // rawbody
