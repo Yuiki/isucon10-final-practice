@@ -2,7 +2,7 @@
 sudo truncate -s 0 -c /var/log/mysql/mysql-slow.log
 
 git pull
-cd ~/webapp/nodejs && npm install
+cd ~/webapp/nodejs && /home/isucon/local/nodejs/bin/npm install
 
 sudo systemctl restart mysql
 
